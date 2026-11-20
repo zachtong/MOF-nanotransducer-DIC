@@ -13,8 +13,8 @@ packed into 19 files:
     raw_camera_files_not_analysed.zip      raw_not_analysed/*.dat, recordings of the same
                                            sessions that were not analysed
 
-Unzipping all zip files into one folder recreates the layout that the
-MATLAB code expects (dataRoot in config/data_paths.m).
+Unzipping all zip files into data/ of the code repository recreates the
+layout that the MATLAB code expects.
 
 Only the files the code reads are packed: image files of the frame folder
 and of the mask folder listed in config/case_table.m, and the four result

@@ -13,10 +13,16 @@ function plot_kymograph_comparison(loadKymograph, outputDir, varargin)
 %                  (n_t, frame index). See scripts/make_kymograph_figures.m.
 %   Name-value options
 %     'groups'   cell array of group names to draw (default: all)
+%     'caseIds'  draw only these recordings (default: all); groups without
+%                any of them are skipped. When only part of a group is
+%                drawn, the IDs are appended to its file names, e.g.
+%                'ZIF-8 (10M)_heatmaps_181404.svg', so that the files of
+%                the complete group are not overwritten
 %     'visible'  'on' | 'off' figure visibility (default 'off')
 
 ip = inputParser;
 addParameter(ip, 'groups', {}, @iscell);
+addParameter(ip, 'caseIds', {}, @iscell);
 addParameter(ip, 'visible', 'off', @(x) any(strcmp(x, {'on', 'off'})));
 parse(ip, varargin{:});
 
@@ -25,6 +31,9 @@ kp = default_params().kymo;
 groups = kymograph_groups();
 if ~isempty(ip.Results.groups)
     groups = groups(ismember({groups.name}, ip.Results.groups));
+end
+if ~isempty(ip.Results.caseIds)
+    groups = restrict_to_cases(groups, ip.Results.caseIds);
 end
 
 for g = 1:numel(groups)
@@ -64,6 +73,24 @@ groups = struct( ...
     'labels', {{'w/o gas', 'w gas'}, {'w/o gas', 'w gas'}, {'w/o gas', 'w gas'}, ...
                {'w/o gas', 'w gas'}, {'w/o gas', 'w gas'}, {'w/o gas', 'w gas'}, ...
                {'FPS-10M'}, {'FPS-1M'}});
+[groups.fileTag] = deal('');   % file-name suffix, set for partial groups
+end
+
+function kept = restrict_to_cases(groups, caseIds)
+% Keep only the listed recordings; drop groups that become empty.
+kept = groups([]);
+for g = 1:numel(groups)
+    use = ismember(groups(g).caseIds, caseIds);
+    if any(use)
+        group = groups(g);
+        if ~all(use)
+            group.fileTag = ['_' strjoin(group.caseIds(use), '_')];
+        end
+        group.caseIds = group.caseIds(use);
+        group.labels = group.labels(use);
+        kept(end + 1) = group; %#ok<AGROW>
+    end
+end
 end
 
 function s = default_style()
@@ -113,7 +140,7 @@ for c = 1:nCond
     end
     hold(ax, 'off');
 end
-saveas(fig, fullfile(outDir, sprintf('%s_heatmaps.svg', group.name)), 'svg');
+saveas(fig, fullfile(outDir, sprintf('%s_heatmaps%s.svg', group.name, group.fileTag)), 'svg');
 close(fig);
 end
 
@@ -157,7 +184,7 @@ if max(allE) > min(allE)
     ylim(ax, [min(allE), 1.05 * max(allE)]);
 end
 hold(ax, 'off');
-saveas(fig, fullfile(outDir, sprintf('%s_strain_time.svg', group.name)), 'svg');
+saveas(fig, fullfile(outDir, sprintf('%s_strain_time%s.svg', group.name, group.fileTag)), 'svg');
 
 % Legend as a separate figure (placeholder lines copy the curve styles)
 legFig = figure('Name', [group.name ' - Legend'], 'Position', style.legendPosition, ...
@@ -172,7 +199,7 @@ end
 leg = legend(axLeg, legLines, entries, 'Location', 'northwest', 'FontSize', style.legendFontSize);
 leg.Interpreter = 'none';
 axis(axLeg, 'off');
-saveas(legFig, fullfile(outDir, sprintf('%s_legend.svg', group.name)), 'svg');
+saveas(legFig, fullfile(outDir, sprintf('%s_legend%s.svg', group.name, group.fileTag)), 'svg');
 close(fig);
 close(legFig);
 end

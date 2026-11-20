@@ -52,12 +52,13 @@ onset are not used.
 
 ## How to use
 
-1. Download the zip files you need (see the table below) and unzip all of
-   them into **one** folder, for example `MOF-nanotransducer-DIC-data/`.
-   Each zip already contains its folder structure, so the result is:
+1. Get the code repository and download the zip files you need (see the
+   table below). Unzip all of them into the folder `data/` of the code
+   repository. Each zip already contains its folder structure, so the
+   result is:
 
    ```
-   MOF-nanotransducer-DIC-data/
+   MOF-nanotransducer-DIC/data/
    ├── ZIF-8/  ZIF-67/  NU-1003/  Microbubble/
    │   ├── Jin_HH_MM_SS/                    TIFF frames
    │   ├── Jin_HH_MM_SS_masks/<subfolder>/  binary masks
@@ -67,8 +68,8 @@ onset are not used.
    └── raw_not_analysed/
    ```
 
-2. Get the code, and in MATLAB point `dataRoot` in `config/data_paths.m` to
-   this folder. `docs/reproduce.md` of the code repository describes every
+2. Open `main.m` of the code repository in MATLAB, choose the steps and
+   run it. `docs/reproduce.md` of the code repository describes every
    step.
 
 | Goal | Zip files needed |

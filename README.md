@@ -66,26 +66,17 @@ layout are described in `docs/dataset_README.md` and `docs/data_layout.md`.
 
 ## Quick start
 
-Step-by-step instructions, expected results and run times are in
-**[`docs/reproduce.md`](docs/reproduce.md)**. In short:
+1. Unzip the data set (Zenodo) into `data/` of this repository.
+2. Open `main.m` in MATLAB, choose what to compute in its *Settings*
+   block, and run it. Results and figures are written to `output/`.
 
-```matlab
-% Once: copy config/data_paths_template.m to config/data_paths.m and set
-% dataRoot (the unzipped data set) and outputRoot (new results).
-setup_paths(false)                  % after every MATLAB start
+By default `main.m` runs the unit tests, draws Fig. 2D/F and Figs. S10–S13
+from the archived results, and checks the code against the archived
+analysis (about 10 minutes). Re-running the post-processing (~1 h per
+recording) and DIC (hours per recording) are switched off by default.
 
-run_tests                           % unit tests, no data needed
-make_kymograph_figures('archive')   % Fig. 2D/F, Figs. S10-S13 from the archived results
-validate_against_archive            % last frame of all 14 recordings vs. the archive
-
-run_postprocessing_case('181404')   % re-run the post-processing (~1 h per recording)
-compare_rerun_with_archive          % all frames vs. the archive
-make_kymograph_figures('rerun')     % figures from your own results
-
-setup_paths                         % compiles the MEX files (needs a C++ compiler)
-run_dic_case('181404')              % re-run DIC from the images (hours)
-compare_dic_with_archive('181404')
-```
+Step-by-step instructions, expected results and the equivalent
+Command Window calls are in **[`docs/reproduce.md`](docs/reproduce.md)**.
 
 ## Reproducibility notes
 
@@ -99,7 +90,9 @@ validated against the archived results. Details and other notes are in
 ## Repository structure
 
 ```
-config/            case table, parameters, data-path template
+main.m             start here: choose the steps and run
+data/              unzip the data set here (ignored by git)
+config/            case table, parameters
 src/dic/           STAQ-DIC driver (non-interactive)
 src/io/            image, mask and R-t loaders
 src/postprocessing bubble model, fit, particle-induced strain, r* fit, kymograph

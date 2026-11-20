@@ -2,8 +2,8 @@ function cases = case_table()
 %CASE_TABLE  Experimental cases analysed with LIC + DIC in the manuscript.
 %
 %   cases = CASE_TABLE() returns a struct array with one entry per
-%   high-speed recording. All paths are relative to the data root defined
-%   in config/data_paths.m (see config/data_paths_template.m).
+%   high-speed recording. All paths are relative to the data folder
+%   (dataRoot, default <repository>/data; see main.m).
 %
 %   Fields
 %     id               six-digit recording ID (HHMMSS of the acquisition)

@@ -8,7 +8,8 @@ reads.
 Zenodo allows at most 100 files per record. The 6,894 data files are
 therefore packed into 17 zip files: one per recording, `processed.zip`, and
 two zips of camera files. Unzipping all of them into one folder gives the
-layout below. Point `dataRoot` in `config/data_paths.m` to that folder.
+layout below. By default the code expects it in `data/` of the repository
+(`dataRoot` in `main.m` sets another folder).
 
 ```
 <dataRoot>/

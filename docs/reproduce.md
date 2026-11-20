@@ -1,17 +1,32 @@
 # Reproducing the DIC analysis
 
 This guide goes from the quickest check (minutes) to a full re-run from the
-raw images (days). Each step can be done on its own once setup (steps 0–2) is
-complete. Every command is typed in the MATLAB Command Window, with the
-current folder set to the repository.
+raw images (days).
 
-| Step | What it reproduces | Data needed | Time |
-|---|---|---|---|
-| [3](#3-unit-tests) | unit tests of the analysis functions | none | < 1 min |
-| [4](#4-published-figures) | Fig. 2D, 2F, Figs. S10–S13 from the archived results | recording zips, or `processed.zip` | minutes |
-| [5](#5-check-the-code-against-the-archive) | last frame of every recording, recomputed and compared | recording zips | minutes |
-| [6](#6-re-run-the-post-processing) | all frames, from the archived DIC displacements | recording zips | ~1 h per recording |
-| [7](#7-re-run-dic-from-the-images) | DIC itself, from the TIFF frames | recording zips | several hours per recording |
+## Quick way: `main.m`
+
+1. Get the code and unzip the data set into `data/` of the repository
+   (step 1 below).
+2. Open `main.m` in MATLAB and set what to compute in its *Settings*
+   block:
+
+   | Setting in `main.m` | Step | What it reproduces | Data needed | Time |
+   |---|---|---|---|---|
+   | `runUnitTests` | [3](#3-unit-tests) | unit tests of the analysis functions | none | < 1 min |
+   | `makeFigures`, `figureSource` | [4](#4-published-figures) | Fig. 2D, 2F, Figs. S10–S13 from the archived results | recording zips, or `processed.zip` | minutes |
+   | `validateArchive` | [5](#5-check-the-code-against-the-archive) | last frame of every recording, recomputed and compared | recording zips | minutes |
+   | `rerunPostprocessing`, `saveVonMisesMaps` | [6](#6-re-run-the-post-processing) | all frames, from the archived DIC displacements | recording zips | ~1 h per recording |
+   | `rerunDIC` | [7](#7-re-run-dic-from-the-images) | DIC itself, from the TIFF frames | recording zips | several hours per recording |
+
+   `cases` selects the recordings (`'all'` or a list of IDs such as
+   `{'181404', '171925'}`). By default, steps 3–5 are switched on (about
+   10 minutes in total) and the re-runs are off.
+3. Run the script (Editor: *Run*, or type `main` in the Command Window).
+   Results and figures are written to `output/`.
+
+The sections below describe each step, the files it writes and the
+expected result. Each step can also be run on its own from the Command
+Window (step 2).
 
 The default parameters (`config/default_params.m`) are those of the
 published analysis. Do not change them to reproduce the paper.
@@ -34,49 +49,37 @@ git clone https://github.com/zachtong/MOF-nanotransducer-DIC.git
 Or download the release archive from Zenodo (DOI in `README.md`).
 
 Download the data set from Zenodo. Unzip **all** downloaded zip files into
-one folder, for example `D:\MOF-nanotransducer-DIC-data`. Each zip file
-already contains its folders, so the result is:
+the folder `data/` of the repository. Each zip file already contains its
+folders, so the result is:
 
 ```
-MOF-nanotransducer-DIC-data\
-├── ZIF-8\  ZIF-67\  NU-1003\  Microbubble\
-│   ├── Jin_HH_MM_SS\                    TIFF frames
-│   ├── Jin_HH_MM_SS_masks\<subfolder>\  masks
-│   └── Jin_HH_MM_SS_DIC_results\        R_data_*.mat, before_sec8.mat, before_sec9.mat
-└── processed\                           <id>_postprocessing.mat
+MOF-nanotransducer-DIC/data/
+├── ZIF-8/  ZIF-67/  NU-1003/  Microbubble/
+│   ├── Jin_HH_MM_SS/                    TIFF frames
+│   ├── Jin_HH_MM_SS_masks/<subfolder>/  masks
+│   └── Jin_HH_MM_SS_DIC_results/        R_data_*.mat, before_sec8.mat, before_sec9.mat
+└── processed/                           <id>_postprocessing.mat
 ```
 
-Any folder with this layout works, for example the original analysis
-folder. The `processed` folder is only needed for
-`make_kymograph_figures('dataset')`.
+The `processed` folder is only needed for `figureSource = 'dataset'`.
+Nothing is ever written to the data folder.
 
-## 2. Tell the code where the data are
+To keep the data somewhere else, for example on a larger disk, set
+`dataRoot` in `main.m` to that folder. Any folder with the layout above
+works, for example the original analysis folder. Likewise, `outputRoot`
+sets where results are written (default `output/`).
+
+## 2. Running single steps from the Command Window
 
 ```matlab
 cd('C:\path\to\MOF-nanotransducer-DIC')
-copyfile(fullfile('config', 'data_paths_template.m'), fullfile('config', 'data_paths.m'))
-edit(fullfile('config', 'data_paths.m'))
-```
-
-In the editor, change the first line to `function paths = data_paths()` and
-set the two folders, for example:
-
-```matlab
-function paths = data_paths()
-paths.dataRoot = 'D:\MOF-nanotransducer-DIC-data';     % the unzipped data set
-paths.outputRoot = 'D:\MOF-nanotransducer-DIC-output';  % new results and figures go here
-end
-```
-
-`config/data_paths.m` is ignored by git. Nothing is ever written to
-`dataRoot`.
-
-Then add the code to the MATLAB path. Repeat this after every MATLAB restart:
-
-```matlab
-setup_paths(false)   % steps 3-6 (no compiler needed)
+setup_paths(false)   % steps 3-6 (no compiler needed); after every MATLAB start
 setup_paths          % step 7: also compiles the two MEX files once
 ```
+
+With the data in `data/` nothing else is needed. For other folders call
+`set_data_paths('D:\my-data', 'D:\my-output')` once per MATLAB session.
+The commands of steps 3–7 below can then be typed directly.
 
 ## 3. Unit tests
 
@@ -106,6 +109,9 @@ strain–time curves (r\* = 1.5, 2.0, 2.5) for the eight groups:
 
 Output: `<outputRoot>/figures/kymographs_archive/<group>/` with
 `<group>_heatmaps.svg`, `<group>_strain_time.svg` and `<group>_legend.svg`.
+If `cases` selects only part of a group, the IDs are appended to these
+names (e.g. `ZIF-8 (10M)_heatmaps_181404.svg`), so the files of the
+complete group are kept.
 The plotted data are those of the paper. Layout and fonts of the final
 paper figures may differ from these SVG files.
 
@@ -235,7 +241,7 @@ run_dic_case('181404', 'params', p)
 ## Outputs
 
 ```
-<outputRoot>/
+output/   (or outputRoot set in main.m)
 ├── dic/<id>_dic_results.mat              run_dic_case
 ├── processed/<id>_postprocessing.mat     run_postprocessing_case, run_all_postprocessing
 ├── figures/kymographs_<source>/<group>/  make_kymograph_figures(source)
@@ -248,10 +254,9 @@ run_dic_case('181404', 'params', p)
 
 | Message | Cause and fix |
 |---|---|
-| `config/data_paths.m not found` | Step 2 was not done, or `setup_paths` was not run |
-| `paths.dataRoot does not exist` | Wrong `dataRoot` in `config/data_paths.m` |
+| `Data folder not found: ...` | Unzip the data set into `data/` of the repository, or set `dataRoot` in `main.m` (Command Window: `set_data_paths`) |
 | `Unrecognized function or variable 'run_postprocessing_case'` (or another function of this repository) | Run `setup_paths(false)` in the repository folder (again after restarting MATLAB) |
 | `Could not compile ba_interp2.cpp` | No C++ compiler: run `mex -setup C++` (only needed for step 7) |
-| `Unable to find file or directory ...before_sec9.mat` (or `before_sec8.mat`, `R_data_*.mat`), `DIC result file not found`, `Image folder not found`, `file not found: ...before_sec9.mat` | The recording zip of that case was not unzipped into `dataRoot`, or `dataRoot` points to the wrong folder |
-| `file not found: ...processed\<id>_postprocessing.mat` | `make_kymograph_figures('dataset')` needs `processed.zip`; `make_kymograph_figures('rerun')` needs step 6 first |
+| `Unable to find file or directory ...before_sec9.mat` (or `before_sec8.mat`, `R_data_*.mat`), `DIC result file not found`, `Image folder not found`, `file not found: ...before_sec9.mat` | The recording zip of that case was not unzipped into the data folder. With only some recordings downloaded, list them in `cases` in `main.m` |
+| `file not found: ...processed\<id>_postprocessing.mat` | `figureSource = 'dataset'` needs `processed.zip`; figures from your own results (`'rerun'`) need step 6 first |
 | Out of memory | Each `before_sec9.mat` is ~140 MB and is loaded one at a time; close other programs |

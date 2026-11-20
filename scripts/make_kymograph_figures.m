@@ -1,4 +1,4 @@
-function outputDir = make_kymograph_figures(source)
+function outputDir = make_kymograph_figures(source, caseIds)
 %MAKE_KYMOGRAPH_FIGURES  Kymographs and strain-time curves (Fig. 2D, 2F, Figs. S10-S13).
 %
 %   MAKE_KYMOGRAPH_FIGURES(source) draws the r*-time kymographs and the
@@ -13,11 +13,17 @@ function outputDir = make_kymograph_figures(source)
 %     'rerun'    your own results of run_postprocessing_case /
 %                run_all_postprocessing, <outputRoot>/processed/
 %
+%   MAKE_KYMOGRAPH_FIGURES(source, caseIds) draws only the listed
+%   recordings, e.g. {'181404', '171925'} (default {} = all).
+%
 %   SVG files are written to <outputRoot>/figures/kymographs_<source>/<group>/
 %   and the folder is returned.
 
-if nargin < 1
+if nargin < 1 || isempty(source)
     source = 'archive';
+end
+if nargin < 2
+    caseIds = {};
 end
 source = char(source);
 setup_paths(false);
@@ -36,7 +42,7 @@ switch source
 end
 
 outputDir = fullfile(paths.outputRoot, 'figures', ['kymographs_' source]);
-plot_kymograph_comparison(loader, outputDir);
+plot_kymograph_comparison(loader, outputDir, 'caseIds', cellstr(string(caseIds)));
 fprintf('Kymograph figures (%s) written to %s\n', source, outputDir);
 end
 

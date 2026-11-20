@@ -46,6 +46,25 @@ classdef ConfigTest < matlab.unittest.TestCase
             tc.verifyEqual(f.vonMisesMaps, fullfile('D', 'out', 'figures', 'vonmises_maps', '181404'));
         end
 
+        function dataPathsDefaultAndOverride(tc)
+            % Clear the session setting (e.g. from main.m) and restore it afterwards.
+            previous = set_data_paths();
+            tc.addTeardown(@() set_data_paths(previous));
+            p = resolve_data_paths();
+            repoRoot = fileparts(fileparts(mfilename('fullpath')));
+            tc.verifyEqual(p.dataRoot, fullfile(repoRoot, 'data'));
+            tc.verifyEqual(p.outputRoot, fullfile(repoRoot, 'output'));
+            other = tempname;
+            mkdir(other);
+            tc.addTeardown(@() rmdir(other, 's'));
+            set_data_paths(other, fullfile(other, 'out'));
+            p = resolve_data_paths();
+            tc.verifyEqual(p.dataRoot, other);
+            tc.verifyEqual(p.outputRoot, fullfile(other, 'out'));
+            set_data_paths(fullfile(other, 'missing'));
+            tc.verifyError(@() resolve_data_paths(), 'resolve_data_paths:MissingData');
+        end
+
         function maxAbsDiffTreatsNaNExplicitly(tc)
             tc.verifyEqual(max_abs_diff([1 NaN 3], [1.5 NaN 3]), 0.5);
             tc.verifyEqual(max_abs_diff([1 NaN], [1 2]), Inf);
