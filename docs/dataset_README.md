@@ -44,9 +44,9 @@ onset are not used.
 
 | File | Contents | Size |
 |---|---|---|
-| `<id>_<material>[_<gas>]_<fps>.zip` (14), e.g. `181404_ZIF-8_gas_10Mfps.zip`, `111031_Microbubble_10Mfps.zip` | everything of one recording needed by the code (see below) | 270–430 MB each |
-| `raw_camera_files.zip` | `raw/Jin_HH_MM_SS.dat`: original camera files of the 14 recordings | 0.72 GB |
-| `raw_camera_files_not_analysed.zip` | `raw_not_analysed/`: 4 recordings of the same sessions that were **not analysed and not used in the paper** (11:20:09, 11:37:40, 11:41:55, 16:21:34) | 0.20 GB |
+| `<id>_<material>[_<gas>]_<fps>.zip` (14), e.g. `181404_ZIF-8_gas_10Mfps.zip`, `111031_Microbubble_10Mfps.zip` | everything of one recording needed by the code (see below) | 270–415 MB each |
+| `raw_camera_files.zip` | `raw/Jin_HH_MM_SS.dat`: original camera files of the 14 recordings | 0.52 GB |
+| `raw_camera_files_not_analysed.zip` | `raw_not_analysed/`: 4 recordings of the same sessions that were **not analysed and not used in the paper** (11:20:09, 11:37:40, 11:41:55, 16:21:34) | 0.15 GB |
 | `MANIFEST.tsv` | every file inside the zip files with size and SHA-256 | |
 | `README.md` | this file | |
 
