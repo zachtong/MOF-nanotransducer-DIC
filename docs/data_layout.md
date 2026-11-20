@@ -1,6 +1,6 @@
 # Data set layout
 
-The data set (Zenodo, DOI to be added) is described file by file in
+The data set (Zenodo, [10.5281/zenodo.24386878](https://doi.org/10.5281/zenodo.24386878)) is described file by file in
 [`dataset_README.md`](dataset_README.md), which is also the README of the
 Zenodo record. This page summarizes which files each step of the code
 reads.

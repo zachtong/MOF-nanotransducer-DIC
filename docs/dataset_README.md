@@ -2,7 +2,8 @@
 
 Data set for the digital image correlation (DIC) analysis in
 
-> *[Manuscript title]*, W. Wang *et al.*, *Science* (in revision).
+> W. Wang *et al.*, liquid-phase gas nanotransducers based on metal–organic
+> frameworks, *Science* (in revision; title and DOI will be added).
 
 The analysis code is in the repository
 [`MOF-nanotransducer-DIC`](https://github.com/zachtong/MOF-nanotransducer-DIC)

@@ -3,7 +3,8 @@
 This repository holds the MATLAB code for the ultra-high-speed digital image
 correlation (DIC) analysis in
 
-> *[Manuscript title]*, W. Wang *et al.*, *Science* (in revision).
+> W. Wang *et al.*, liquid-phase gas nanotransducers based on metal–organic
+> frameworks, *Science* (in revision; title and DOI will be added).
 
 It measures the strain that liquid-phase gas nanotransducers (ZIF-8, ZIF-67
 and NU-1003 metal–organic-framework particles, with and without loaded gas)
@@ -12,8 +13,8 @@ the pressure wave of a laser-induced cavitation bubble.
 
 The code produces the data behind Fig. 2C–F, Figs. S9–S13 and Movie S2.
 
-Code release DOI: *to be added (Zenodo)*.
-Data set DOI: *to be added (Zenodo)*.
+Data set (Zenodo): [10.5281/zenodo.24386878](https://doi.org/10.5281/zenodo.24386878). Unzip it into `data/`.
+Code release (Zenodo): DOI added with the first release.
 
 ## Pipeline
 

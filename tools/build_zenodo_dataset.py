@@ -29,12 +29,17 @@ Usage
     --processed-dir  folder with <id>_postprocessing.mat, written by
                      export_processed_from_archive (MATLAB):
                      <outputRoot>/dataset_processed/processed
-    --out            empty output folder for the record files
+    --out            output folder for the record files (empty, or see --resume)
     --dry-run        list what would be packed (sizes only), write nothing
+    --resume         keep zip files that already exist in --out and pass the
+                     CRC check (e.g. to add processed.zip later)
+    --prefetch N     read the files of each zip with N parallel threads first
+                     (fast on cloud-synced folders such as Box Drive; default 16)
 
 Standard library only (Python 3.8+).
 """
 import argparse
+import concurrent.futures
 import hashlib
 import os
 import re
@@ -157,22 +162,62 @@ def add_file(zf, src, arcname):
     return digest.hexdigest()
 
 
+def prefetch(members, workers):
+    """Read all source files once in parallel so that a cloud drive downloads them."""
+    def touch(src):
+        with open(src, "rb") as f:
+            while f.read(CHUNK):
+                pass
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
+        list(pool.map(touch, [src for src, _ in members]))
+
+
+def existing_entries(target, name, members):
+    """Manifest lines of a finished zip, or None if it must be (re)written."""
+    try:
+        with zipfile.ZipFile(target) as zf:
+            if zf.testzip() is not None:
+                return None
+            if [i.filename for i in zf.infolist()] != [a.as_posix() for _, a in members]:
+                return None
+            lines = []
+            for info in zf.infolist():
+                digest = hashlib.sha256()
+                with zf.open(info) as fin:
+                    for chunk in iter(lambda: fin.read(CHUNK), b""):
+                        digest.update(chunk)
+                lines.append(f"{name}\t{info.filename}\t{info.file_size}\t{digest.hexdigest()}")
+            return lines
+    except (zipfile.BadZipFile, OSError):
+        return None
+
+
 def write_record(args, archives):
     args.out.mkdir(parents=True, exist_ok=True)
-    if any(not p.name.startswith(".") for p in args.out.iterdir()):
-        sys.exit(f"Output folder is not empty: {args.out}")
+    if not args.resume and any(not p.name.startswith(".") for p in args.out.iterdir()):
+        sys.exit(f"Output folder is not empty: {args.out} (use --resume to keep finished zips)")
     manifest = ["zip\tpath\tbytes\tsha256"]
     for name, members in archives:
         target = args.out / name
+        if args.resume and target.exists():
+            lines = existing_entries(target, name, members)
+            if lines is not None:
+                print(f"Keeping {name} (already complete)", flush=True)
+                manifest.extend(lines)
+                continue
         print(f"Writing {name} ({len(members)} files) ...", flush=True)
-        with zipfile.ZipFile(target, "w", allowZip64=True) as zf:
+        if args.prefetch > 1:
+            prefetch(members, args.prefetch)
+        partial = target.with_name(target.name + ".partial")
+        with zipfile.ZipFile(partial, "w", allowZip64=True) as zf:
             for src, arcname in members:
                 sha = add_file(zf, src, arcname)
                 manifest.append(f"{name}\t{arcname.as_posix()}\t{src.stat().st_size}\t{sha}")
-        with zipfile.ZipFile(target) as zf:
+        with zipfile.ZipFile(partial) as zf:
             bad = zf.testzip()
         if bad:
             sys.exit(f"CRC check failed for {bad} in {name}")
+        partial.replace(target)
     (args.out / "MANIFEST.tsv").write_text("\n".join(manifest) + "\n", encoding="utf-8")
     shutil.copyfile(DATASET_README, args.out / "README.md")
 
@@ -198,6 +243,8 @@ def main():
     parser.add_argument("--processed-dir", type=Path)
     parser.add_argument("--out", type=Path)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--prefetch", type=int, default=16)
     args = parser.parse_args()
     if not args.dry_run and args.out is None:
         parser.error("--out is required unless --dry-run is given")
