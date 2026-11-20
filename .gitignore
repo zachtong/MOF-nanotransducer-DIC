@@ -1,0 +1,26 @@
+# Local data locations (personal paths)
+config/data_paths.m
+
+# MATLAB
+*.asv
+*.m~
+*.mat
+*.fig
+slprj/
+
+# Compiled MEX binaries (built by setup_paths)
+*.mexw64
+*.mexa64
+*.mexmaci64
+*.mexmaca64
+
+# Run outputs
+admm_tmp*/
+output/
+results/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

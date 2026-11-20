@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the article and this software release."
+title: "MOF-nanotransducer-DIC: DIC analysis of particle-induced strain fields around liquid-phase gas nanotransducers"
+type: software
+authors:
+  - family-names: Tong
+    given-names: Zixiang
+    affiliation: "The University of Texas at Austin"
+  - family-names: Yang
+    given-names: Jin
+    affiliation: "The University of Texas at Austin"
+version: "1.0.0"
+license: BSD-3-Clause
+repository-code: "https://github.com/zachtong/MOF-nanotransducer-DIC"
+# doi: to be added after the Zenodo release
+references:
+  - type: article
+    title: "SpatioTemporally Adaptive Quadtree mesh (STAQ) digital image correlation for resolving large deformations around complex geometries and discontinuities"
+    authors:
+      - family-names: Yang
+        given-names: Jin
+      - family-names: Rubino
+        given-names: Vito
+      - family-names: Ma
+        given-names: Zhiyuan
+      - family-names: Tao
+        given-names: Jianhui
+      - family-names: Yin
+        given-names: Yifan
+      - family-names: McGhee
+        given-names: Alex
+      - family-names: Pan
+        given-names: Wei
+      - family-names: Franck
+        given-names: Christian
+    journal: "Experimental Mechanics"
+    volume: 62
+    start: 1191
+    end: 1215
+    year: 2022
