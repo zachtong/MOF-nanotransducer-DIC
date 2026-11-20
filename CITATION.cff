@@ -12,7 +12,8 @@ authors:
 version: "1.0.0"
 license: BSD-3-Clause
 repository-code: "https://github.com/zachtong/MOF-nanotransducer-DIC"
-# doi of this software: added after the Zenodo release
+doi: "10.5281/zenodo.24386905"
+date-released: "2026-11-19"
 references:
   - type: data
     title: "Ultra-high-speed DIC data: MOF liquid-phase gas nanotransducers"

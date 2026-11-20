@@ -14,7 +14,7 @@ the pressure wave of a laser-induced cavitation bubble.
 The code produces the data behind Fig. 2C–F, Figs. S9–S13 and Movie S2.
 
 Data set (Zenodo): [10.5281/zenodo.24386878](https://doi.org/10.5281/zenodo.24386878). Unzip it into `data/`.
-Code release (Zenodo): DOI added with the first release.
+Code (this repository, Zenodo): [10.5281/zenodo.24386905](https://doi.org/10.5281/zenodo.24386905).
 
 ## Pipeline
 

@@ -7,7 +7,7 @@ Data set for the digital image correlation (DIC) analysis in
 
 The analysis code is in the repository
 [`MOF-nanotransducer-DIC`](https://github.com/zachtong/MOF-nanotransducer-DIC)
-(code DOI: *to be added*). This data set and the code together reproduce
+(code DOI: [10.5281/zenodo.24386905](https://doi.org/10.5281/zenodo.24386905)). This data set and the code together reproduce
 Fig. 2C–F, Figs. S9–S13 and Movie S2 of the paper.
 
 Each recording shows a gelatin hydrogel that contains one particle
