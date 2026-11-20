@@ -7,7 +7,6 @@ function f = case_files(caseInfo, paths)
 %   Inputs (data set, below paths.dataRoot)
 %     archivedDic        <resultDir>/before_sec8.mat  DIC result of the paper
 %     archivedWorkspace  <resultDir>/before_sec9.mat  workspace after post-processing
-%     datasetProcessed   processed/<id>_postprocessing.mat
 %   Outputs (below paths.outputRoot)
 %     rerunDic           dic/<id>_dic_results.mat              run_dic_case
 %     rerunProcessed     processed/<id>_postprocessing.mat     run_postprocessing_case
@@ -16,7 +15,6 @@ function f = case_files(caseInfo, paths)
 resultFolder = fullfile(paths.dataRoot, caseInfo.resultDir);
 f.archivedDic = fullfile(resultFolder, 'before_sec8.mat');
 f.archivedWorkspace = fullfile(resultFolder, 'before_sec9.mat');
-f.datasetProcessed = fullfile(paths.dataRoot, 'processed', [caseInfo.id '_postprocessing.mat']);
 
 f.rerunDic = fullfile(paths.outputRoot, 'dic', [caseInfo.id '_dic_results.mat']);
 f.rerunProcessed = fullfile(paths.outputRoot, 'processed', [caseInfo.id '_postprocessing.mat']);

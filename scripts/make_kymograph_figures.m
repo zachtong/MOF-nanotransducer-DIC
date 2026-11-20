@@ -2,14 +2,11 @@ function outputDir = make_kymograph_figures(source, caseIds)
 %MAKE_KYMOGRAPH_FIGURES  Kymographs and strain-time curves (Fig. 2D, 2F, Figs. S10-S13).
 %
 %   MAKE_KYMOGRAPH_FIGURES(source) draws the r*-time kymographs and the
-%   strain-time curves of all 14 recordings from one of three sources:
+%   strain-time curves of all 14 recordings from one of two sources:
 %
 %     'archive'  (default) the archived workspaces of the paper,
 %                <dataRoot>/<resultDir>/before_sec9.mat. Gives the
 %                published figures.
-%     'dataset'  the compact processed files of the data set,
-%                <dataRoot>/processed/<id>_postprocessing.mat
-%                (same numbers as 'archive', < 50 MB instead of ~2 GB)
 %     'rerun'    your own results of run_postprocessing_case /
 %                run_all_postprocessing, <outputRoot>/processed/
 %
@@ -32,13 +29,11 @@ paths = resolve_data_paths();
 switch source
     case 'archive'
         loader = @(c) load_archived_kymograph(case_file(c, paths, 'archivedWorkspace'));
-    case 'dataset'
-        loader = @(c) load_processed_kymograph(case_file(c, paths, 'datasetProcessed'));
     case 'rerun'
         loader = @(c) load_processed_kymograph(case_file(c, paths, 'rerunProcessed'));
     otherwise
         error('make_kymograph_figures:Source', ...
-            'Unknown source "%s". Use ''archive'', ''dataset'' or ''rerun''.', source);
+            'Unknown source "%s". Use ''archive'' or ''rerun''.', source);
 end
 
 outputDir = fullfile(paths.outputRoot, 'figures', ['kymographs_' source]);

@@ -23,8 +23,6 @@ cases = 'all';
 runUnitTests        = true;       % unit tests, no data needed (< 1 min)
 makeFigures         = true;       % kymographs and strain-time curves,
                                   % Fig. 2D, 2F, Figs. S10-S13 (minutes)
-figureSource        = 'archive';  % 'archive': recording zips (archived results)
-                                  % 'dataset': processed.zip only
 validateArchive     = true;       % recompute the last frame of each recording
                                   % and compare with the paper (minutes)
 rerunPostprocessing = false;      % all frames from the archived DIC result
@@ -55,7 +53,7 @@ if runUnitTests
 end
 
 if makeFigures
-    make_kymograph_figures(figureSource, caseIds);
+    make_kymograph_figures('archive', caseIds);
 end
 
 if validateArchive

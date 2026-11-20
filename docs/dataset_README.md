@@ -7,7 +7,7 @@ Data set for the digital image correlation (DIC) analysis in
 
 The analysis code is in the repository
 [`MOF-nanotransducer-DIC`](https://github.com/zachtong/MOF-nanotransducer-DIC)
-(code DOI: [10.5281/zenodo.24386905](https://doi.org/10.5281/zenodo.24386905)). This data set and the code together reproduce
+(code DOI: [10.5281/zenodo.24386904](https://doi.org/10.5281/zenodo.24386904), all versions). This data set and the code together reproduce
 Fig. 2C–F, Figs. S9–S13 and Movie S2 of the paper.
 
 Each recording shows a gelatin hydrogel that contains one particle
@@ -45,7 +45,6 @@ onset are not used.
 | File | Contents | Size |
 |---|---|---|
 | `<id>_<material>[_<gas>]_<fps>.zip` (14), e.g. `181404_ZIF-8_gas_10Mfps.zip`, `111031_Microbubble_10Mfps.zip` | everything of one recording needed by the code (see below) | 270–430 MB each |
-| `processed.zip` | `processed/<id>_postprocessing.mat`: r\* fits and kymographs of all 14 recordings | < 50 MB |
 | `raw_camera_files.zip` | `raw/Jin_HH_MM_SS.dat`: original camera files of the 14 recordings | 0.72 GB |
 | `raw_camera_files_not_analysed.zip` | `raw_not_analysed/`: 4 recordings of the same sessions that were **not analysed and not used in the paper** (11:20:09, 11:37:40, 11:41:55, 16:21:34) | 0.20 GB |
 | `MANIFEST.tsv` | every file inside the zip files with size and SHA-256 | |
@@ -64,7 +63,6 @@ onset are not used.
    │   ├── Jin_HH_MM_SS/                    TIFF frames
    │   ├── Jin_HH_MM_SS_masks/<subfolder>/  binary masks
    │   └── Jin_HH_MM_SS_DIC_results/        R_data_*.mat, before_sec8.mat, before_sec9.mat
-   ├── processed/                           <id>_postprocessing.mat
    ├── raw/                                 camera files
    └── raw_not_analysed/
    ```
@@ -75,7 +73,7 @@ onset are not used.
 
 | Goal | Zip files needed |
 |---|---|
-| Figures only (kymographs and strain–time curves) | `processed.zip` |
+| Figures (kymographs and strain–time curves) | the recording zips |
 | Check the code against the archived analysis | the recording zips |
 | Re-run the post-processing (strain, bubble model, r\* fits) | the recording zips |
 | Re-run DIC from the images | the recording zips |
@@ -125,12 +123,6 @@ post-processing. It contains the state of the last frame and the results of
 all frames: `DICpara.fitResults` (r\* fit of every frame), `evm_raw`,
 `evm_grid_smoothed`, `r_star_grid`, `time_grid` (kymograph). The code uses it
 to check its results against the paper.
-
-**processed/<id>_postprocessing.mat** Compact results, extracted from
-`before_sec9.mat`: `fitResults`, `kymo` (`r_star_grid`, `time_grid`,
-`time_us`, `evm_raw`, `evm_grid_smoothed`), `primaryFit`, `caseInfo`,
-`params`, `imageNames`. Same layout as the output of the code's
-`run_postprocessing_case`.
 
 **raw/\*.dat** Original files of the high-speed camera, 256 frames each
 (51,209,408 bytes, i.e. 256 × 400 × 250 × 16 bit plus a header). The code

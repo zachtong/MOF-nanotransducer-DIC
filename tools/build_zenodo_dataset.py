@@ -2,13 +2,12 @@
 """Build the Zenodo data set of the DIC analysis from the analysis folders.
 
 Zenodo accepts at most 100 files per record, so the ~7,000 data files are
-packed into 19 files:
+packed into 18 files:
 
     README.md                              data set description (docs/dataset_README.md)
     MANIFEST.tsv                           every packed file: zip, path, bytes, SHA-256
     <id>_<material>[_<gas>]_<fps>.zip      one per recording (14): TIFF frames, masks,
                                            R_data_*.mat, before_sec8.mat, before_sec9.mat
-    processed.zip                          processed/<id>_postprocessing.mat (14)
     raw_camera_files.zip                   raw/<folder>.dat of the 14 analysed recordings
     raw_camera_files_not_analysed.zip      raw_not_analysed/*.dat, recordings of the same
                                            sessions that were not analysed
@@ -22,17 +21,14 @@ files. Recordings are read from config/case_table.m.
 
 Usage
     python3 tools/build_zenodo_dataset.py --data-root DIR --raw-dir DIR \
-        [--processed-dir DIR] --out DIR [--dry-run]
+        --out DIR [--dry-run] [--resume]
 
     --data-root      folder with <material>/<folder>... (the analysis data)
     --raw-dir        folder with the camera files <folder>.dat
-    --processed-dir  folder with <id>_postprocessing.mat, written by
-                     export_processed_from_archive (MATLAB):
-                     <outputRoot>/dataset_processed/processed
     --out            output folder for the record files (empty, or see --resume)
     --dry-run        list what would be packed (sizes only), write nothing
     --resume         keep zip files that already exist in --out and pass the
-                     CRC check (e.g. to add processed.zip later)
+                     CRC check (e.g. after an interrupted run)
     --prefetch N     read the files of each zip with N parallel threads first
                      (fast on cloud-synced folders such as Box Drive; default 16)
 
@@ -138,14 +134,6 @@ def plan(args, cases):
         archives.append(("raw_camera_files_not_analysed.zip",
                          [(p, Path("raw_not_analysed") / p.name) for p in others]))
 
-    if args.processed_dir:
-        processed = []
-        for case in cases:
-            src = args.processed_dir / f"{case['id']}_postprocessing.mat"
-            if not src.is_file():
-                sys.exit(f"Missing processed file: {src}")
-            processed.append((src, Path("processed") / src.name))
-        archives.append(("processed.zip", processed))
     return archives
 
 
@@ -240,7 +228,6 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--data-root", type=Path, required=True)
     parser.add_argument("--raw-dir", type=Path, required=True)
-    parser.add_argument("--processed-dir", type=Path)
     parser.add_argument("--out", type=Path)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--resume", action="store_true")
@@ -253,8 +240,6 @@ def main():
     archives = plan(args, cases)
     if args.dry_run:
         summarize(archives)
-        if not args.processed_dir:
-            print("processed.zip not included (no --processed-dir).")
         return
     write_record(args, archives)
     summarize(archives, args.out)

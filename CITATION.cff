@@ -9,10 +9,10 @@ authors:
   - family-names: Yang
     given-names: Jin
     affiliation: "The University of Texas at Austin"
-version: "1.0.0"
+version: "1.0.1"
 license: BSD-3-Clause
 repository-code: "https://github.com/zachtong/MOF-nanotransducer-DIC"
-doi: "10.5281/zenodo.24386905"
+doi: "10.5281/zenodo.24386904"
 date-released: "2026-11-19"
 references:
   - type: data

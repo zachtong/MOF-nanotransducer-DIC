@@ -9,7 +9,6 @@ data/
 │   ├── Jin_HH_MM_SS/                    TIFF frames
 │   ├── Jin_HH_MM_SS_masks/<subfolder>/  masks
 │   └── Jin_HH_MM_SS_DIC_results/        R_data_*.mat, before_sec8.mat, before_sec9.mat
-└── processed/                           <id>_postprocessing.mat
 ```
 
 Everything in this folder except this file is ignored by git. To keep the

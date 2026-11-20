@@ -38,8 +38,6 @@ classdef ConfigTest < matlab.unittest.TestCase
             resultDir = fullfile('D', 'data', 'ZIF-8', 'Jin_18_14_04_DIC_results');
             tc.verifyEqual(f.archivedDic, fullfile(resultDir, 'before_sec8.mat'));
             tc.verifyEqual(f.archivedWorkspace, fullfile(resultDir, 'before_sec9.mat'));
-            tc.verifyEqual(f.datasetProcessed, ...
-                fullfile('D', 'data', 'processed', '181404_postprocessing.mat'));
             tc.verifyEqual(f.rerunDic, fullfile('D', 'out', 'dic', '181404_dic_results.mat'));
             tc.verifyEqual(f.rerunProcessed, ...
                 fullfile('D', 'out', 'processed', '181404_postprocessing.mat'));

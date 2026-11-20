@@ -13,7 +13,7 @@ raw images (days).
    | Setting in `main.m` | Step | What it reproduces | Data needed | Time |
    |---|---|---|---|---|
    | `runUnitTests` | [3](#3-unit-tests) | unit tests of the analysis functions | none | < 1 min |
-   | `makeFigures`, `figureSource` | [4](#4-published-figures) | Fig. 2D, 2F, Figs. S10–S13 from the archived results | recording zips, or `processed.zip` | minutes |
+   | `makeFigures` | [4](#4-published-figures) | Fig. 2D, 2F, Figs. S10–S13 from the archived results | recording zips | minutes |
    | `validateArchive` | [5](#5-check-the-code-against-the-archive) | last frame of every recording, recomputed and compared | recording zips | minutes |
    | `rerunPostprocessing`, `saveVonMisesMaps` | [6](#6-re-run-the-post-processing) | all frames, from the archived DIC displacements | recording zips | ~1 h per recording |
    | `rerunDIC` | [7](#7-re-run-dic-from-the-images) | DIC itself, from the TIFF frames | recording zips | several hours per recording |
@@ -58,10 +58,10 @@ MOF-nanotransducer-DIC/data/
 │   ├── Jin_HH_MM_SS/                    TIFF frames
 │   ├── Jin_HH_MM_SS_masks/<subfolder>/  masks
 │   └── Jin_HH_MM_SS_DIC_results/        R_data_*.mat, before_sec8.mat, before_sec9.mat
-└── processed/                           <id>_postprocessing.mat
+├── raw/                                 camera files (not read by the code)
+└── raw_not_analysed/
 ```
 
-The `processed` folder is only needed for `figureSource = 'dataset'`.
 Nothing is ever written to the data folder.
 
 To keep the data somewhere else, for example on a larger disk, set
@@ -114,9 +114,6 @@ names (e.g. `ZIF-8 (10M)_heatmaps_181404.svg`), so the files of the
 complete group are kept.
 The plotted data are those of the paper. Layout and fonts of the final
 paper figures may differ from these SVG files.
-
-With only `processed.zip` downloaded, use `make_kymograph_figures('dataset')`.
-It gives the same figures from the compact files.
 
 ## 5. Check the code against the archive
 
@@ -246,8 +243,7 @@ output/   (or outputRoot set in main.m)
 ├── processed/<id>_postprocessing.mat     run_postprocessing_case, run_all_postprocessing
 ├── figures/kymographs_<source>/<group>/  make_kymograph_figures(source)
 ├── figures/vonmises_maps/<id>/           run_postprocessing_case(..., 'saveFigures', true)
-├── validation/*.csv                      validate_against_archive, compare_*_with_archive
-└── dataset_processed/processed/          export_processed_from_archive (only to build the data set)
+└── validation/*.csv                      validate_against_archive, compare_*_with_archive
 ```
 
 ## Troubleshooting
@@ -258,5 +254,5 @@ output/   (or outputRoot set in main.m)
 | `Unrecognized function or variable 'run_postprocessing_case'` (or another function of this repository) | Run `setup_paths(false)` in the repository folder (again after restarting MATLAB) |
 | `Could not compile ba_interp2.cpp` | No C++ compiler: run `mex -setup C++` (only needed for step 7) |
 | `Unable to find file or directory ...before_sec9.mat` (or `before_sec8.mat`, `R_data_*.mat`), `DIC result file not found`, `Image folder not found`, `file not found: ...before_sec9.mat` | The recording zip of that case was not unzipped into the data folder. With only some recordings downloaded, list them in `cases` in `main.m` |
-| `file not found: ...processed\<id>_postprocessing.mat` | `figureSource = 'dataset'` needs `processed.zip`; figures from your own results (`'rerun'`) need step 6 first |
+| `file not found: ...processed\<id>_postprocessing.mat` | Figures from your own results (`make_kymograph_figures('rerun')`) need step 6 first |
 | Out of memory | Each `before_sec9.mat` is ~140 MB and is loaded one at a time; close other programs |
