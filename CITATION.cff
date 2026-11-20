@@ -9,11 +9,11 @@ authors:
   - family-names: Yang
     given-names: Jin
     affiliation: "The University of Texas at Austin"
-version: "1.0.1"
+version: "1.0.2"
 license: BSD-3-Clause
 repository-code: "https://github.com/zachtong/MOF-nanotransducer-DIC"
 doi: "10.5281/zenodo.24386904"
-date-released: "2026-11-19"
+date-released: "2026-11-20"
 references:
   - type: data
     title: "Ultra-high-speed DIC data: MOF liquid-phase gas nanotransducers"

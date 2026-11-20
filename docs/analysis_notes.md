@@ -43,10 +43,6 @@ weakest.
 * `max_iterations = 10` was always passed to the refinement. A workspace
   variable `max_iterations = 5` in one archive is a leftover and was not
   used.
-* The mask folders of 171925 and 181404 were moved after the analysis.
-  Their old location was `000_Data/20250923_DIC_data/...`; they are now in
-  `<material>/<folder>_masks/{smoothed_2, smoothed}`. Files and counts are
-  identical.
 * The full-field figure export of April 2026 drew every 5th frame
   (`2:5:N`). The kymographs always used every frame. In this repository
   both are separate options of `run_postprocessing_case`.

@@ -5,13 +5,12 @@ how it was adapted from the code that produced the published figures.
 
 ## Original analysis code
 
-* The analysis ran as an interactive MATLAB session (Windows, 2025-09 to
-  2026-04).
+* The analysis ran interactively in MATLAB (Windows, 2025-09 to 2026-04).
 * It was based on a local copy of STAQ-DIC (fork `zachtong/STAQ-DIC`,
-  commit `33cf05a`) with uncommitted changes:
-  * `main_ALDIC_Quadtree_inc_Wenliang.m`, the main script (version of
-    2026-04-28);
-  * `func_ultrasound_particle_Wenliang/`, the project functions.
+  commit `33cf05a`) with two project-specific additions:
+  * a main script derived from STAQ-DIC `main_ALDIC_Quadtree_inc.m`
+    (version of 2026-04-28);
+  * a folder of project functions (bubble model, fits, plotting).
 * Results of every recording were saved as full workspaces in
   `<case>_DIC_results/before_sec8.mat` and `before_sec9.mat`.
 
@@ -20,7 +19,7 @@ how it was adapted from the code that produced the published figures.
 | Original | This repository | Changes |
 |---|---|---|
 | Main script, Sections 1–2 (interactive image, ROI, mask and parameter input) | `src/io/load_case_images.m`, `load_case_masks.m`, `config/` | Values taken from the archived `DICpara`; no GUI or prompts |
-| Main script, frame loop, Sections 3–6 (lines 102–662) | `src/dic/run_dic_case.m` | Copied verbatim except removed comment blocks and debug plots (list: `provenance/run_dic_case_removed_lines.txt`), debug figures behind `showPlots`, two thresholds read from `default_params`. Same saved variables; the file is named `<id>_dic_results.mat` (original `results_<lastImage>_ws20_st8.mat`, archived as `before_sec8.mat`) |
+| Main script, frame loop, Sections 3–6 (lines 102–662) | `src/dic/run_dic_case.m` | Copied verbatim except removed commented-out blocks and debug plots, debug figures behind `showPlots`, two thresholds read from `default_params`. Same saved variables; the file is named `<id>_dic_results.mat` (original `results_<lastImage>_ws20_st8.mat`, archived as `before_sec8.mat`) |
 | Main script, Section 7 (ADMM convergence printout) | — | Diagnostic only, not included |
 | Main script, incremental → cumulative block | `src/postprocessing/compute_cumulative_displacement.m` | Interactive `pause` replaced by a warning |
 | Main script, Section 8 | `src/postprocessing/run_postprocessing_case.m` | Prompts replaced by `default_params`; the circle-fit y-flip `251` is computed from the image height; loop over all frames |
@@ -48,5 +47,5 @@ how it was adapted from the code that produced the published figures.
   above.
 * `plot_4param_optimization.m`, `plot_residual_surface.m` and
   `draw_sec_bubble.m`: diagnostic plots only.
-* Main script Sections 9.5–10 and the "Nomin's dataset" block: template
-  leftovers, not used for this paper.
+* Main script Sections 9.5–10: template sections, not used for this
+  paper.

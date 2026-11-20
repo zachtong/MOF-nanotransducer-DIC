@@ -16,8 +16,9 @@ function dicFile = run_dic_case(caseId, varargin)
 %     'outputDir'  folder for the result file (default: <outputRoot>/dic)
 %     'showPlots'  show the per-frame diagnostic figures (default: false)
 %
-%   The frame loop is the original code (main_ALDIC_Quadtree_inc_Wenliang.m,
-%   lines 102-662) with dead commented-out blocks removed; see
+%   The frame loop is the original code (project main script derived from
+%   STAQ-DIC main_ALDIC_Quadtree_inc.m, lines 102-662) with dead
+%   commented-out blocks removed; see
 %   docs/provenance.md. Interactive image/ROI/parameter input was replaced
 %   by config/default_params.m and config/case_table.m.
 %
